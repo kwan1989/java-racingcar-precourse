@@ -4,6 +4,7 @@ import nextstep.test.NSTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import racinggame.exception.CustomException;
 
 public class ApplicationTest extends NSTest {
     private static final int MOVING_FORWARD = 4;
