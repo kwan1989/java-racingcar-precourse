@@ -39,16 +39,17 @@ public class RacingModel {
         return racingCount;
     }
 
-    public RacingModel(Map<String, Integer> players , int racingCount) {
+    public RacingModel(Map<String, Integer> players, int racingCount) {
         this.players = players;
         this.racingCount = racingCount;
     }
 
-    public void add(String player, int move){
-        this.players.put(player, players.get(player) + move);
+    public void add(String player) {
+        //this.players.put(player, players.get(player) + 1);
+        this.players.merge(player, 1, (e, i) -> e + i);
     }
 
-    public static RacingModel input(Map<String, Integer> players, int racingCount){
+    public static RacingModel input(Map<String, Integer> players, int racingCount) {
         return new RacingModel(players, racingCount);
     }
 }
