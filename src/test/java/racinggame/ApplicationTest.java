@@ -39,7 +39,7 @@ public class ApplicationTest extends NSTest {
     }
 
     @Override
-    public void runMain() {
+    public void runMain() throws CustomException {
         Application.main(new String[]{});
     }
 }
