@@ -30,6 +30,7 @@ public class RacingService {
     /**
      * '시도할 회수는 몇회인가요?' 의 반복
      * TC 접근 PUBLIC 변경.
+     *
      * @param racingModel
      */
     public void processRacing(RacingModel racingModel) {
@@ -75,25 +76,59 @@ public class RacingService {
      * @return RacingModel 바인딩
      */
     private RacingModel userInput() throws CustomException {
-        ValidationRegularExpress validationRegularExpress = new ValidationRegularExpress();
-        Map<String, Integer> result = new HashMap<>();
-        int playCount = 0;
-
-        System.out.println("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)");
-        String inputPlayer = Console.readLine().trim();
-        String[] split = inputPlayer.split(",");
-
-        if (validationRegularExpress.isValidationNameRegularExpress(inputPlayer)) {
-            result = userInputDataMapper(result, split);
-        }
-
-        System.out.println("시도할 회수는 몇회인가요?");
-        String inputCount = Console.readLine().trim();
-        if (validationRegularExpress.isValidationNumberRegularExpress(inputCount)) {
-            playCount = Integer.parseInt(inputCount);
-        }
+        Map<String, Integer> result = userInputDataPlayer();
+        int playCount = userInputDataPlayCount();
 
         return RacingModel.input(result, playCount);
+    }
+
+    /**
+     * 사용자 입력, 플레이어 리스트
+     * @return
+     * @throws CustomException
+     */
+    private Map<String, Integer> userInputDataPlayer() throws CustomException {
+        try {
+            ValidationRegularExpress validationRegularExpress = new ValidationRegularExpress();
+            Map<String, Integer> result = new HashMap<>();
+
+            System.out.println("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)");
+            String inputPlayer = Console.readLine().trim();
+            String[] split = inputPlayer.split(",");
+
+            if (validationRegularExpress.isValidationNameRegularExpress(inputPlayer)) {
+                result = userInputDataMapper(result, split);
+            }
+
+            return result;
+        } catch (CustomException ex) {
+            System.out.println(ex.getMessage());
+            return userInputDataPlayer();
+        }
+    }
+
+    /**
+     * 사용자 입력, 레이싱 사이클(횟수)
+     * @return
+     * @throws CustomException
+     */
+    private int userInputDataPlayCount() throws CustomException {
+        try {
+            ValidationRegularExpress validationRegularExpress = new ValidationRegularExpress();
+            int playCount = 0;
+
+            System.out.println("시도할 회수는 몇회인가요?");
+            String inputCount = Console.readLine().trim();
+
+            if (validationRegularExpress.isValidationNumberRegularExpress(inputCount)) {
+                playCount = Integer.parseInt(inputCount);
+            }
+
+            return playCount;
+        }catch(CustomException ex){
+            System.out.println(ex.getMessage());
+            return userInputDataPlayCount();
+        }
     }
 
     /**
@@ -113,6 +148,7 @@ public class RacingService {
 
     /**
      * 이름은 5자 이하만 가능하다.
+     *
      * @param userName
      * @return
      * @throws CustomException
@@ -179,8 +215,7 @@ public class RacingService {
     /**
      * 가장 진행이 빠른 플레이어 리스트
      *
-     * @param resultMember
-     * TC를 위한 PUBLIC
+     * @param resultMember TC를 위한 PUBLIC
      * @return 가장 빠른 레이스 플레이어 리스트 콤마로 이어붙인 String
      */
     public String userMaxMemberToString(List<String> resultMember) {
