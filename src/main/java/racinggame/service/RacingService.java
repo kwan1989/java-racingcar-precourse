@@ -155,7 +155,7 @@ public class RacingService {
      */
     private boolean isUserInputDataNameLengthValidate(String userName) throws CustomException {
         ValidationRegularExpress validationRegularExpress = new ValidationRegularExpress();
-        return validationRegularExpress.isValidationNameLengthExpress(userName);
+        return validationRegularExpress.isValidationNameLengthRagularExpress(userName);
     }
 
     /**

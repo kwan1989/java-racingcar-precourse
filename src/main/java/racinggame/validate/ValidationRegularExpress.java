@@ -38,7 +38,7 @@ public class ValidationRegularExpress {
      * @return
      * @throws CustomException
      */
-    public boolean isValidationNameLengthExpress(String input) throws CustomException {
+    public boolean isValidationNameLengthRagularExpress(String input) throws CustomException {
         if (input.length() > 5){
             throw new CustomException("[ERROR] 이름의 길이를 초과하였습니다.");
         }
