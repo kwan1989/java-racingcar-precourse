@@ -13,22 +13,36 @@ import java.util.Map;
 
 public class RacingService {
 
+    /**
+     * 가장 빠른 사람찾기 전역변수
+     */
     private int maxValue = 0;
 
+    /**
+     * 레이싱 플레이
+     *
+     * @throws CustomException
+     */
     public void play() throws CustomException {
         processRacing(userInput());
     }
 
     /**
      * '시도할 회수는 몇회인가요?' 의 반복
-     *
+     * TC 접근 PUBLIC 변경.
      * @param racingModel
      */
-    private void processRacing(RacingModel racingModel) {
+    public void processRacing(RacingModel racingModel) {
         for (int i = 0; i < racingModel.getRacingCount(); i++) {
+
+            /* 플레이어 레이싱 */
             processRacingPlayers(racingModel);
+
+            /* 레이싱 결과 출력*/
             userOutput(racingModel);
         }
+
+        /* 최종 우승 출력 */
         userOutResult(racingModel);
     }
 
@@ -58,7 +72,7 @@ public class RacingService {
     /**
      * 사용자 입력
      *
-     * @return
+     * @return RacingModel 바인딩
      */
     private RacingModel userInput() throws CustomException {
         ValidationRegularExpress validationRegularExpress = new ValidationRegularExpress();
@@ -69,22 +83,50 @@ public class RacingService {
         String inputPlayer = Console.readLine().trim();
         String[] split = inputPlayer.split(",");
 
-        // TODO : 메소드 변경
-        if (validationRegularExpress.validationNameRegularExpress(inputPlayer)) {
-            for (int i = 0; i < split.length; i++) {
-                result.put(split[i], 0);
-            }
+        if (validationRegularExpress.isValidationNameRegularExpress(inputPlayer)) {
+            result = userInputDataMapper(result, split);
         }
 
         System.out.println("시도할 회수는 몇회인가요?");
         String inputCount = Console.readLine().trim();
-        if (validationRegularExpress.validationNumberRegularExpress(inputCount)) {
+        if (validationRegularExpress.isValidationNumberRegularExpress(inputCount)) {
             playCount = Integer.parseInt(inputCount);
         }
 
         return RacingModel.input(result, playCount);
     }
 
+    /**
+     * Map 바인딩
+     *
+     * @param map
+     * @param split
+     * @return 맵으로 반환
+     */
+    private Map<String, Integer> userInputDataMapper(Map<String, Integer> map, String[] split) throws CustomException {
+        for (int i = 0; i < split.length; i++) {
+            isUserInputDataNameLengthValidate(split[i]);
+            map.put(split[i], 0);
+        }
+        return map;
+    }
+
+    /**
+     * 이름은 5자 이하만 가능하다.
+     * @param userName
+     * @return
+     * @throws CustomException
+     */
+    private boolean isUserInputDataNameLengthValidate(String userName) throws CustomException {
+        ValidationRegularExpress validationRegularExpress = new ValidationRegularExpress();
+        return validationRegularExpress.isValidationNameLengthExpress(userName);
+    }
+
+    /**
+     * 과정 출력
+     *
+     * @param racingModel
+     */
     private void userOutput(RacingModel racingModel) {
         StringBuffer sb = new StringBuffer();
         for (String player : racingModel.getPlayers().keySet()) {
@@ -103,6 +145,11 @@ public class RacingService {
         return result;
     }
 
+    /**
+     * 결과물 출력
+     *
+     * @param racingModel
+     */
     private void userOutResult(RacingModel racingModel) {
         StringBuilder result = new StringBuilder("최종 우승자는 ");
         List<String> resultMember = new ArrayList<>();
@@ -114,6 +161,14 @@ public class RacingService {
         System.out.println(result);
     }
 
+    /**
+     * 가장 진행이 빠른 플레이어 찾기
+     *
+     * @param player
+     * @param playerValue
+     * @param resultMember
+     * @return
+     */
     private List<String> userMaxMember(String player, int playerValue, List<String> resultMember) {
         if (maxValue == playerValue) {
             resultMember.add(player);
@@ -121,11 +176,19 @@ public class RacingService {
         return resultMember;
     }
 
-    private String userMaxMemberToString(List<String> resultMember) {
+    /**
+     * 가장 진행이 빠른 플레이어 리스트
+     *
+     * @param resultMember
+     * TC를 위한 PUBLIC
+     * @return 가장 빠른 레이스 플레이어 리스트 콤마로 이어붙인 String
+     */
+    public String userMaxMemberToString(List<String> resultMember) {
         String result = "";
         for (int i = 0; i < resultMember.size(); i++) {
             result += resultMember.get(i) + ",";
         }
         return result.replaceAll(",$", "");
     }
+
 }
