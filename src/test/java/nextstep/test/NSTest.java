@@ -4,6 +4,7 @@ import nextstep.utils.Randoms;
 import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.MockedStatic;
+import racinggame.exception.CustomException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -59,7 +60,7 @@ public abstract class NSTest {
      * 프로그램이 정상적으로 종료
      * @param args
      */
-    protected void run(final String... args) {
+    protected void run(final String... args) throws CustomException {
         subject(args);
     }
 
@@ -67,12 +68,12 @@ public abstract class NSTest {
         assertThat(output()).contains(args);
     }
 
-    private void subject(final String... args) {
+    private void subject(final String... args) throws CustomException {
         command(args);
         runMain();
     }
 
-    protected abstract void runMain();
+    protected abstract void runMain() throws CustomException;
 
     private void command(final String... args) {
         final byte[] buf = Strings.join(args).with("\n").getBytes();
